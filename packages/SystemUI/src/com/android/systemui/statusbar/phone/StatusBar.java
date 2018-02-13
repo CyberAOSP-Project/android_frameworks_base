@@ -185,6 +185,7 @@ import com.android.systemui.plugins.statusbar.NotificationSwipeActionHelper.Snoo
 import com.android.systemui.qs.QSFragment;
 import com.android.systemui.qs.QSPanel;
 import com.android.systemui.qs.QSTileHost;
+import com.android.systemui.qs.QuickStatusBarHeader;
 import com.android.systemui.qs.car.CarQSFragment;
 import com.android.systemui.recents.Recents;
 import com.android.systemui.recents.ScreenPinningRequest;
@@ -403,6 +404,7 @@ public class StatusBar extends SystemUI implements DemoMode,
 
     // settings
     private QSPanel mQSPanel;
+    private QuickStatusBarHeader mQuickStatusBarHeader;
 
     // top bar
     private KeyguardStatusBarView mKeyguardStatusBar;
@@ -5065,10 +5067,19 @@ public class StatusBar extends SystemUI implements DemoMode,
 	    resolver.registerContentObserver(Settings.System.getUriFor(
                     Settings.System.DOUBLE_TAP_SLEEP_GESTURE),
                     false, this, UserHandle.USER_ALL);
+	    resolver.registerContentObserver(Settings.System.getUriFor(
+                    Settings.System.SHOW_BATTERY_PERCENT),
+                    false, this, UserHandle.USER_ALL);
+            resolver.registerContentObserver(Settings.Secure.getUriFor(
+                    Settings.Secure.STATUS_BAR_BATTERY_STYLE),
+                    false, this, UserHandle.USER_ALL);
         }
 
         @Override
         public void onChange(boolean selfChange, Uri uri) {
+	    super.onChange(selfChange, uri);
+            update();
+
             if (uri.equals(Settings.System.getUriFor(Settings.System.QS_ROWS_PORTRAIT)) ||
                     uri.equals(Settings.System.getUriFor(Settings.System.QS_ROWS_LANDSCAPE)) ||
                     uri.equals(Settings.System.getUriFor(Settings.System.QS_COLUMNS_PORTRAIT)) ||
@@ -5090,8 +5101,12 @@ public class StatusBar extends SystemUI implements DemoMode,
             } else if (uri.equals(Settings.System.getUriFor(
                 Settings.System.DOUBLE_TAP_SLEEP_GESTURE))) {
                 setStatusBarWindowViewOptions();
+            } else if (uri.equals(Settings.System.getUriFor(
+                    Settings.System.SHOW_BATTERY_PERCENT))
+                    || uri.equals(Settings.Secure.getUriFor(
+                    Settings.Secure.STATUS_BAR_BATTERY_STYLE))) {
+                updateBatterySettings();
             }
-            update();
         }
 
          public void update() {
@@ -5100,6 +5115,7 @@ public class StatusBar extends SystemUI implements DemoMode,
             setQsRowsColumns();
             updateTheme();
 	    setStatusBarWindowViewOptions();
+	    updateBatterySettings();
         }
     }
 
@@ -5112,6 +5128,18 @@ public class StatusBar extends SystemUI implements DemoMode,
     private void setStatusBarWindowViewOptions() {
         if (mStatusBarWindow != null) {
             mStatusBarWindow.setStatusBarWindowViewOptions();
+        }
+    }
+
+    private void updateBatterySettings() {
+        if (mStatusBarView != null) {
+            mStatusBarView.updateBatterySettings();
+        }
+        if (mKeyguardStatusBar != null) {
+            mKeyguardStatusBar.updateBatterySettings();
+        }
+        if (mQuickStatusBarHeader != null) {
+            mQuickStatusBarHeader.updateBatterySettings();
         }
     }
 
