@@ -82,7 +82,7 @@ public class BatteryMeterView extends LinearLayout implements
     private final int mFrameColor;
 
     private int mStyle = BatteryMeterDrawableBase.BATTERY_STYLE_PORTRAIT;
-    private boolean mShowPercentText ;
+    private int mShowPercentText;
     private boolean mCharging;
 
     private final int mEndPadding;
@@ -206,8 +206,10 @@ public class BatteryMeterView extends LinearLayout implements
     }
 
     private boolean forcePercentageQsHeader() {
-        return mQsHeaderOrKeyguard && (mStyle == BatteryMeterDrawableBase.BATTERY_STYLE_PORTRAIT
-                || mStyle == BatteryMeterDrawableBase.BATTERY_STYLE_TEXT);
+        return mQsHeaderOrKeyguard
+                && ((mStyle == BatteryMeterDrawableBase.BATTERY_STYLE_PORTRAIT && mShowPercentText == 0)
+                || mStyle == BatteryMeterDrawableBase.BATTERY_STYLE_TEXT
+                || (isCircleBattery() && mShowPercentText == 0));
     }
 
     @Override
@@ -239,7 +241,8 @@ public class BatteryMeterView extends LinearLayout implements
     @Override
     public void onBatteryLevelChanged(int level, boolean pluggedIn, boolean charging) {
 
-        if (isCircleBattery()) {
+        if (isCircleBattery()
+            || mStyle == BatteryMeterDrawableBase.BATTERY_STYLE_PORTRAIT) {
             setForceShowPercent(pluggedIn);
             // mDrawable.setCharging(pluggedIn) will invalidate the view
         }
@@ -289,7 +292,7 @@ public class BatteryMeterView extends LinearLayout implements
         if ((mShowPercentAvailable && systemSetting) || mForceShowPercent) {
 
         if (forcePercentageQsHeader()
-                || (mStyle != BatteryMeterDrawableBase.BATTERY_STYLE_HIDDEN && (mShowPercentText || mForceShowPercent))) {
+                || (mStyle != BatteryMeterDrawableBase.BATTERY_STYLE_HIDDEN && ((mShowPercentText == 1) || mForceShowPercent))) {
             if (!showing) {
                 mBatteryPercentView = loadPercentView();
                 if (mTextColor != 0) mBatteryPercentView.setTextColor(mTextColor);
@@ -310,7 +313,8 @@ public class BatteryMeterView extends LinearLayout implements
             mBatteryPercentView.setPaddingRelative(0, 0,
                     mStyle == BatteryMeterDrawableBase.BATTERY_STYLE_TEXT ? 0 : mEndPadding, 0);
         }
-        mDrawable.showPercentInsideCircle(!mShowPercentText);
+        mDrawable.showPercentInsideCircle(mShowPercentText == 2);
+        mDrawable.setShowPercent(mShowPercentText == 2);
     }
 
     @Override
@@ -421,7 +425,8 @@ public class BatteryMeterView extends LinearLayout implements
         }
 
         if (forcePercentageQsHeader()
-                || style == BatteryMeterDrawableBase.BATTERY_STYLE_TEXT || (isCircleBattery() && mCharging)) {
+                || style == BatteryMeterDrawableBase.BATTERY_STYLE_TEXT
+                || ((isCircleBattery() || style == BatteryMeterDrawableBase.BATTERY_STYLE_PORTRAIT) && mCharging)) {
             mForceShowPercent = true;
         } else {
             mForceShowPercent = false;
@@ -432,7 +437,7 @@ public class BatteryMeterView extends LinearLayout implements
     }
 
     public void updateSettings(boolean fromObserver) {
-        mShowPercentText = 0 != Settings.System.getIntForUser(mContext.getContentResolver(),
+        mShowPercentText = Settings.System.getIntForUser(mContext.getContentResolver(),
                 SHOW_BATTERY_PERCENT, 1, mUser);
         mStyle = Settings.Secure.getIntForUser(mContext.getContentResolver(),
                 STATUS_BAR_BATTERY_STYLE, BatteryMeterDrawableBase.BATTERY_STYLE_PORTRAIT, mUser);
