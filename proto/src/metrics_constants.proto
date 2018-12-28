@@ -6435,7 +6435,7 @@ message MetricsEvent {
     // END OF AOSP CONSTANTS
 
     // CYBER Metrics
-    CYBER = 1500;
+    CYBER = 1502;
 
     // Omni Metrics
     OMNI_QS_WEATHER = 1151;
