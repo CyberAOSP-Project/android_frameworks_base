@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.android.internal.util.arrow;
+package com.android.internal.util.cyber;
 
 import android.content.Context;
 import android.content.Intent;
@@ -43,7 +43,7 @@ import com.android.internal.statusbar.IStatusBarService;
 /**
  * Some custom utilities
  */
-public class ArrowUtils {
+public class CyberUtils {
 
     public static final String INTENT_SCREENSHOT = "action_handler_screenshot";
     public static final String INTENT_REGION_SCREENSHOT = "action_handler_region_screenshot";

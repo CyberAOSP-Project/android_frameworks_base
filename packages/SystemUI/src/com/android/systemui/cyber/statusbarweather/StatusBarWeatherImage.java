@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.android.systemui.arrow.statusbarweather;
+package com.android.systemui.cyber.statusbarweather;
 
 import android.content.ContentResolver;
 import android.content.Context;

@@ -14,7 +14,7 @@
 * limitations under the License.
 */
 
-package com.android.internal.util.arrow;
+package com.android.internal.util.cyber;
 
 import android.app.Activity;
 import android.app.ActivityManagerNative;
@@ -142,7 +142,7 @@ public class Action {
                     }
                     startActivity(context, intent);
                 } catch (ActivityNotFoundException e) {
-                    Log.e("arrowActions:", "No activity to handle assist long press action.", e);
+                    Log.e("cyberActions:", "No activity to handle assist long press action.", e);
                 }
                 return;
             } else if (action.equals(ActionConstants.ACTION_VIB)) {
@@ -231,7 +231,7 @@ public class Action {
                 try {
                     intent = Intent.parseUri(action, 0);
                 } catch (URISyntaxException e) {
-                    Log.e("arrowActions:", "URISyntaxException: [" + action + "]");
+                    Log.e("cyberActions:", "URISyntaxException: [" + action + "]");
                     return;
                 }
                 startActivity(context, intent);

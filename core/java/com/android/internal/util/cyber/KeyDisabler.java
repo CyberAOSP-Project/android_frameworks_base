@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.android.internal.util.arrow;
+package com.android.internal.util.cyber;
 
 /*
  * Disable capacitive keys
