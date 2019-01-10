@@ -325,7 +325,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import dalvik.system.PathClassLoader;
-import com.android.internal.util.arrow.ArrowUtils;
+import com.android.internal.util.cyber.CyberUtils;
 
 /**
  * WindowManagerPolicy implementation for the Android phone UI.  This
@@ -1142,7 +1142,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
 
     private void toggleFlashLight() {
         performHapticFeedbackLw(null, HapticFeedbackConstants.LONG_PRESS, true);
-        ArrowUtils.toggleCameraFlash();
+        CyberUtils.toggleCameraFlash();
     }
 
     private UEventObserver mHDMIObserver = new UEventObserver() {
@@ -2724,7 +2724,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
         // Allow the navigation bar to move on non-square small devices (phones).
         mNavigationBarCanMove = width != height && shortSizeDp < 600;
 
-        mHasNavigationBar = ArrowUtils.deviceSupportNavigationBar(mContext);
+        mHasNavigationBar = CyberUtils.deviceSupportNavigationBar(mContext);
 
         // For demo purposes, allow the rotation of the HDMI display to be controlled.
         // By default, HDMI locks rotation to landscape.
@@ -2893,7 +2893,7 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             mVolumeMusicControl = Settings.System.getIntForUser(resolver,
                     Settings.System.VOLUME_BUTTON_MUSIC_CONTROL, 1,
                     UserHandle.USER_CURRENT) != 0;
-            mHasNavigationBar = ArrowUtils.deviceSupportNavigationBar(mContext);
+            mHasNavigationBar = CyberUtils.deviceSupportNavigationBar(mContext);
 
             mHideNotch = Settings.System.getIntForUser(resolver,
                     Settings.System.HIDE_NOTCH, 0,
@@ -9261,13 +9261,13 @@ public class PhoneWindowManager implements WindowManagerPolicy {
             if (ActionHandler.INTENT_SHOW_POWER_MENU.equals(action)) {
                 mHandler.removeMessages(MSG_DISPATCH_SHOW_GLOBAL_ACTIONS);
                 mHandler.sendEmptyMessage(MSG_DISPATCH_SHOW_GLOBAL_ACTIONS);
-            } else if (ArrowUtils.INTENT_SCREENSHOT.equals(action)) {
+            } else if (CyberUtils.INTENT_SCREENSHOT.equals(action)) {
                 mContext.enforceCallingOrSelfPermission(Manifest.permission.ACCESS_SURFACE_FLINGER,
                         TAG + "sendCustomAction permission denied");
                 mHandler.removeCallbacks(mScreenshotRunnable);
                 mScreenshotRunnable.setScreenshotType(TAKE_SCREENSHOT_FULLSCREEN);
                 mHandler.post(mScreenshotRunnable);
-            } else if (ArrowUtils.INTENT_REGION_SCREENSHOT.equals(action)) {
+            } else if (CyberUtils.INTENT_REGION_SCREENSHOT.equals(action)) {
                 mContext.enforceCallingOrSelfPermission(Manifest.permission.ACCESS_SURFACE_FLINGER,
                         TAG + "sendCustomAction permission denied");
                 mHandler.removeCallbacks(mScreenshotRunnable);
